@@ -8,25 +8,39 @@ using std::cout;
 using std::endl;
 using std::string;
 
-void printSym(std::ostream & s, unsigned sym) {
+/* printSymbol
+ * ------------
+ * formatted output of different symbol
+ * 
+ * sym: the numeric value of symbol
+ */
+void printSymbol(unsigned sym) {
   if (sym > 256 ) {
-    s << "INV";
+    cout << "INV";
   }
   else if (sym == 256) {
-    s << "EOF";
+    cout << "EOF";
   }
-  else if (isprint(sym)) {
+  else if (isprint(sym)) { // is printable ?
     char c = sym;
-    s << "'" << c << "'";
+    cout << "'" << c << "'";
   }
   else {
-    std::streamsize w = s.width(3);
-    s << std::hex << sym << std::dec;
-    s.width(w);
+    std::streamsize w = cout.width(3);
+    cout << std::hex << sym << std::dec;
+    cout.width(w);
   }
 }
+
+/* readFrequency
+ * ----------------
+ * open a file and record the frequencies of every character
+ * the 256-th element represent the occurrence of EOF, which should be exactly 1
+ * 
+ * fname: name of the file to read
+ * return: the array of frequencies, with index representing the character's numeric value
+ */
 uint64_t * readFrequencies(const char * fname) {
-  //WRITE ME!
   ifstream is;
   is.open(fname);
   uint64_t * ans = new uint64_t[257](); 

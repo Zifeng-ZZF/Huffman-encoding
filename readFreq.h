@@ -5,5 +5,5 @@
 #include <iostream>
 
 uint64_t * readFrequencies(const char * fname);
-void printSym(std::ostream & s, unsigned sym);
+void printSymbol(unsigned sym);
 #endif

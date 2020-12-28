@@ -2,7 +2,6 @@
 #include <cassert>
 
 Node *  buildTree(uint64_t * counts) {
-  //WRITE ME!
   priority_queue_t pq;
   for (unsigned i = 0; i < 257; ++i) {
     if (counts[i] == 0) { continue; }

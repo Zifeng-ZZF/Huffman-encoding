@@ -25,13 +25,10 @@ void writeHeader(BitFileWriter * bfw, const std::map<unsigned,BitString> &theMap
   }
 }
 
-void writeCompressedOutput(const char* inFile,
-			   const char *outFile,
-			   const std::map<unsigned,BitString> &theMap ){
+void writeCompressedOutput(const char* inFile, const char *outFile, const std::map<unsigned,BitString> &theMap ){
   BitFileWriter bfw(outFile);
-  writeHeader(&bfw,theMap);
-
-  //WRITE YOUR CODE HERE!
+  //header information of how to decompress the bits
+  writeHeader(&bfw, theMap);
   //open the input file for reading
   ifstream is;
   is.open(inFile);
@@ -39,8 +36,7 @@ void writeCompressedOutput(const char* inFile,
     std::cerr << "File not valid: " << inFile << std::endl;
     exit(EXIT_SUCCESS);
   }
-  //You need to read the input file, lookup the characters in the map,
-  //and write the proper bit string with the BitFileWriter
+  //lookup the characters in the map & and write the proper bit string with the BitFileWriter
   unsigned c = 0;
   while (is.get((char&)c)) {
     assert(theMap.find(c) != theMap.end());
@@ -49,8 +45,6 @@ void writeCompressedOutput(const char* inFile,
   }
   //dont forget to lookup 256 for the EOF marker, and write it out.
   bfw.writeBitString(theMap.find(256)->second);
-  //BitFileWriter will close the output file in its destructor
-  //but you probably need to close your input file.
   is.close();
 }
 
@@ -59,18 +53,20 @@ int main(int argc, char ** argv) {
     fprintf(stderr,"Usage: compress input output\n");
     return EXIT_FAILURE;
   }
-  //WRITE YOUR CODE HERE
-  //Implement main
-  //hint 1: most of the work is already done. 
-  //hint 2: you can look at the main from the previous tester for 90% of this
+  // get frequencies of character of the input file
   uint64_t * counts = readFrequencies(argv[1]);
   assert(counts != NULL);
+  // build the binary tree
   Node * root = buildTree(counts);
+  // free the frequencies
   delete[] counts;
   std::map<unsigned, BitString> theMap;
   BitString bstr;
+  // build the map of "character : bits representation" from the tree
   root->buildMap(bstr, theMap);
+  // open src file again and write to dest file
   writeCompressedOutput(argv[1], argv[2], theMap);
+  // free tree structure
   delete root;
   return EXIT_SUCCESS;
 }
