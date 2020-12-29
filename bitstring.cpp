@@ -59,7 +59,7 @@ unsigned char BitString::removeByte() {
   // if size's wrong, terminate
   assert(bits.size() >= 8);
   unsigned char ans = 0; // get the first byte
-  for (int i = 0; i < 8; i++) {
+  for (int i = 0; i < 8; ++i) {
     bool b = bits[0];
     bits.pop_front();
     ans = (ans << 1) | (b ? 1 : 0);
@@ -88,24 +88,25 @@ BitFileWriter::BitFileWriter(const char * fname): f(fopen(fname,"w")), pending()
   }
 }
 
+/* no copy */
 BitFileWriter::BitFileWriter(const BitFileWriter & rhs) {
   throw IllegalCopy();
 }
 
+/* no copy */
 BitFileWriter & BitFileWriter::operator=(const BitFileWriter & rhs) {
   throw IllegalCopy();
 }
 
 void BitFileWriter::pushData() {
   while(pending.size() >= 8) {
-    unsigned char b = pending.removeByte();
-    fwrite(&b,sizeof(b),1, f);
+    unsigned char b = pending.removeByte(); // get the first byte
+    fwrite(&b, sizeof(b), 1, f); // write that byte to the file
   }
 }
 
 void BitFileWriter::writeByte(unsigned char b) {
   pending.insertByte(b);
-
   pushData();
 }
 
@@ -119,8 +120,7 @@ BitFileWriter::~BitFileWriter() {
     pending = pending.plusZero();
   }
   pushData();
-  int result = fclose(f);
-  if (result != 0) {
+  if (fclose(f) != 0) {
     perror("fclose failed!");
   }
 }
@@ -129,7 +129,7 @@ BitFileWriter::~BitFileWriter() {
 /* BitReader class definitions: */
 void BitReader::ensureData(int n) {
   if (bs.size() < n) {
-    int x = fgetc(f);
+    int x = fgetc(f); // get one byte
     unsigned char c = x == EOF? 0 : x;
     bs.insertByte(c);
   }

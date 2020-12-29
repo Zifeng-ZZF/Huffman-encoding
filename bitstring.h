@@ -32,31 +32,35 @@ class BitString {
 class BitFileWriter {
 private:
   //This should NOT be copied or assigned to.
-  BitFileWriter(const BitFileWriter & rhs);
-  BitFileWriter & operator=(const BitFileWriter & rhs);
-  FILE * f;
-  BitString pending;
-  void pushData();
+  BitFileWriter(const BitFileWriter & rhs); // throw exception
+  BitFileWriter & operator=(const BitFileWriter & rhs); // throw exception
+  FILE * f; // file stream
+  BitString pending; // BitString to write to the file
+  void pushData(); // write complete bytes in BitString 'bits' to file 'f', byte by byte
 public:
-  BitFileWriter(const char * fname);
-  void writeByte(unsigned char b);
-  void writeBitString(const BitString & bs);
-  ~BitFileWriter();
+  BitFileWriter(const char * fname); // open a file stream to fname with "w" permission
+  void writeByte(unsigned char b); // add to back of the pending BitString and pushData
+  void writeBitString(const BitString & bs); // append a Bitstring to pending and push Data
+  ~BitFileWriter(); // destructor: supplement zeros to remaining bits and pushData & close file stream
 };
 
+/* BitReader
+ * -----------
+ * Wrapping a FILE * and a BitString to read bit/byte from the file into BitString
+ */
 class BitReader {
 private:
   FILE * f;
   BitString bs;
-  void ensureData(int);
+  void ensureData(int); // make sure enough bits are read from file into BitString to be returned
 public:
   BitReader(FILE * input): f(input), bs(){}
-  virtual ~BitReader(){
+  virtual ~BitReader(){ // destructor
     fclose(f);
     f = NULL;
   }
-  bool readBit();
-  unsigned char readByte();
+  bool readBit(); // read one bit from file
+  unsigned char readByte(); // read one byte from file
 };
 
 #endif
