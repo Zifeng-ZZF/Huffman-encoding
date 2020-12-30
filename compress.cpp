@@ -12,20 +12,20 @@
 using std::ifstream;
 
 
-void writeHeader(BitFileWriter * bfw, const std::map<unsigned,BitString> &theMap) {
+void writeHeader(BitFileWriter * bfw, const std::map<unsigned, BitString> & theMap) {
   for (int i =0 ; i < 257; i++) {
     std::map<unsigned,BitString>::const_iterator it = theMap.find(i);
     if (it != theMap.end()) {
-      bfw->writeByte(it->second.size());
-      bfw->writeBitString(it->second);
+      bfw->writeByte(it->second.size()); // current BitString's size information
+      bfw->writeBitString(it->second); // current BitString's content
     }
     else {
-      bfw->writeByte(0);
+      bfw->writeByte(0); // if no such character, write empty byte
     }
   }
 }
 
-void writeCompressedOutput(const char* inFile, const char *outFile, const std::map<unsigned,BitString> &theMap ){
+void writeCompressedOutput(const char * inFile, const char * outFile, const std::map<unsigned, BitString> & theMap){
   BitFileWriter bfw(outFile);
   //header information of how to decompress the bits
   writeHeader(&bfw, theMap);
