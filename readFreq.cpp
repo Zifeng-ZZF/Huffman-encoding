@@ -8,12 +8,6 @@ using std::cout;
 using std::endl;
 using std::string;
 
-/* printSymbol
- * ------------
- * formatted output of different symbol
- * 
- * sym: the numeric value of symbol
- */
 void printSymbol(unsigned sym) {
   if (sym > 256 ) {
     cout << "INV";
@@ -32,14 +26,6 @@ void printSymbol(unsigned sym) {
   }
 }
 
-/* readFrequency
- * ----------------
- * open a file and record the frequencies of every character
- * the 256-th element represent the occurrence of EOF, which should be exactly 1
- * 
- * fname: name of the file to read
- * return: the array of frequencies, with index representing the character's numeric value
- */
 uint64_t * readFrequencies(const char * fname) {
   ifstream is;
   is.open(fname);

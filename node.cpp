@@ -2,7 +2,7 @@
 #include <cassert>
 
 void Node::helper(BitString b, std::map<unsigned, BitString> & theMap, Node * node) {
-  if (node->sym != NO_SYM) {
+  if (node->sym != NO_SYM) { // leaf node
     assert(node->left == NULL && node->right == NULL);
     //    std::cout << b << std::endl;
     theMap[node->sym] = b;
@@ -17,7 +17,7 @@ void Node::helper(BitString b, std::map<unsigned, BitString> & theMap, Node * no
   }
 }
 
-void Node::buildMap(BitString b, std::map<unsigned,BitString> & theMap) {
+void Node::buildMap(BitString b, std::map<unsigned, BitString> & theMap) {
   helper(b, theMap, this);
 }
 
