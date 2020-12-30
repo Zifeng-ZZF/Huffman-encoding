@@ -22,8 +22,19 @@ Using huffman-encoding to compress text file.
 
 ### Construct the map
 - related files: node.h, node.cpp, bitstring.h, bitstring.cpp
+* buildMap is a member of a node. The map is built from the root node, the map is passed as reference, and a temporary BitString is used copied at every recursive call, so that at each leaf node a instance of BitString of that symbol is saved in the map.
 * recursively fill in the map with BitString by way of backtracing and DFS (no edit to the original BitString)
 * plus zero to the BitString if goes left, plus one if goes right
 * when reach leave node, the BitString for that symbol in the leaf is complete and should then be put into the map
 
 ### write the bitstring as bits into a new file
+- related files: node.h, node.cpp, bitstring.h, bitstring.cpp, compress.cpp
+- classes: BitFileWriter, BitString
+* open a BitFileWriter instance to the output file.
+* write header: iterate through the whole map, write each symbol's size information & symbol's bit representation (BitString) into the output file. If a symbol is never present, write an empty byte to the output file.
+* open the input file again, and write every symbol as its converted bit representation from the map into the output file using the BitFileWriter created before.
+* EOF must be wriitten manually
+
+## Run the program
+1. run "Make"
+2. run the program using two arguments: one is the input file's name, the other should be the output file's name
